@@ -2,7 +2,7 @@
 
 #include <ESP8266WiFi.h>
 #include "RainSensor.h"
-#include "fsr.h"
+#include "Fsr.h"
 
 #define HUMEDO 1
 #define SECO 0
@@ -171,4 +171,4 @@ void sendData() {
       Serial.println("Connection Failed...!!");
     #endif
   }
-} 
+}
