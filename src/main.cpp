@@ -19,7 +19,7 @@ void sendData();
 bool checkPosition();
 
 #define DIGITAL_PIN_RAINDROPS_SENSOR  5
-#define ANALOG_PIN A0
+#define ANALOG_PIN_FSR A0
 #define MAX_ANALOG_OSCILATION 75
 #define POSITION_TIME 4000
 
@@ -32,7 +32,7 @@ uint16_t previusMinRange = 0;
 
 WiFiClient client;
 RainSensor rainSensor(DIGITAL_PIN_RAINDROPS_SENSOR, &wetFunc, &dryFunc);
-Fsr FSR(ANALOG_PIN);
+Fsr FSR(ANALOG_PIN_FSR);
 
 /*******************************************
  * Variables para enviar al servidor
@@ -138,9 +138,9 @@ void dryFunc(){
 void sendData() {
   if (client.connect("monitor.grupoesoluciones.com", 80) > 0) {
 
-    client.print("GET "
-                 "http://monitor.grupoesoluciones.com/"
-                 "controlador/ReceptorDatosPaciente.php?");
+    client.print("GET ");
+    client.print("http://monitor.grupoesoluciones.com/");
+    client.print("controlador/ReceptorDatosPaciente.php?");
     client.print("&cantidad=");
     client.print("2");
     client.print("&estado_parametro_sensado1=");
