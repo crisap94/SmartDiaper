@@ -21,7 +21,7 @@ bool checkPosition();
 #define DIGITAL_PIN_RAINDROPS_SENSOR  5
 #define ANALOG_PIN_FSR A0
 #define MAX_ANALOG_OSCILATION 75
-#define POSITION_TIME 4000
+#define POSITION_TIME 10000
 
 uint32_t previusPositiontime = 0;
 uint16_t maxRange = 0;
@@ -56,20 +56,20 @@ uint8_t parametro_sensado2 = 0;
 void setup() {
   Serial.begin(9600);
   rainSensor.begin();
+  Serial.println("");
+  Serial.println("Conectando a: ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
 
-  // Serial.println("Conectando a: ");
-  // Serial.println(ssid);
-  // WiFi.begin(ssid, password);
-  //
-  // while (WiFi.status() != WL_CONNECTED) {
-  //   delay(500);
-  //   Serial.print(".");
-  // }
-  //
-  // Serial.println("Conectado a Red WI-FI");
-  // Serial.println(ssid);
-  // Serial.print("La Ip de la placa es: ");
-  // Serial.println(WiFi.localIP());
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("Conectado a Red WI-FI");
+  Serial.println(ssid);
+  Serial.print("La Ip de la placa es: ");
+  Serial.println(WiFi.localIP());
 }
 
 
@@ -113,9 +113,9 @@ bool checkPosition(){
   if(value > minRange && value < maxRange && millis() - previusPositiontime > POSITION_TIME){
     parametro_sensado2 = value;
     #ifdef DEBUGGIN
-      Serial.println("Enviado dato de posicion estatica...");
+      Serial.println("El Paciente no se ha movido");
     #endif
-    // sendData();
+    sendData();
     previusPositiontime = millis();
   }
 }
@@ -125,14 +125,14 @@ void wetFunc(){
   #ifdef DEBUGGIN
     Serial.println("El Paciente se Orino");
   #endif
-  // sendData();
+  sendData();
 }
 void dryFunc(){
   parametro_sensado1 = SECO;
   #ifdef DEBUGGIN
     Serial.println("El Pañal Fue cambiado");
   #endif
-  // sendData();
+  sendData();
 }
 
 void sendData() {
@@ -143,27 +143,27 @@ void sendData() {
     client.print("controlador/ReceptorDatosPaciente.php?");
     client.print("&cantidad=");
     client.print("2");
-    client.print("&estado_parametro_sensado1=");
-    client.print(estado_parametro_sensado1);
+    // client.print("&estado_parametro_sensado1=");
+    // client.print(estado_parametro_sensado1);
     client.print("&id_tipo_sensado1=");
     client.print(id_tipo_sensado1);
     client.print("&parametro_sensado1=");
     client.print(parametro_sensado1);
-    client.print("&estado_parametro_sensado2=");
-    client.print(estado_parametro_sensado2);
+    // client.print("&estado_parametro_sensado2=");
+    // client.print(estado_parametro_sensado2);
     client.print("&id_tipo_sensado2=");
     client.print(id_tipo_sensado2);
     client.print("&parametro_sensado2=");
     client.print(parametro_sensado2);
     client.print("&identificacion_paciente=");
-    client.print("65690298");
+    client.print("65690293");
     client.print(" HTTP/1.0");
     client.println();
     client.println("User-Agent: monitor.grupoesoluciones.com");
     client.println();
 
     #ifdef DEBUGGIN
-      Serial.print("DATOS ENVIADOS..!!");
+      Serial.println("DATOS ENVIADOS..!!");
     #endif
 
   }else{
